@@ -47,4 +47,23 @@ public class User{
         this.email = email;
     }
     
+    public User(UserRequestDto requestDto, String loginId, String password, String nickname) {
+        this.loginId = requestDto.getLoginId();
+        this.password = requestDto.getPassword();
+        this.nickname = requestDto.getNickname();
+    }
+
+    public User(String nickname, String password, String email, String phone) {
+        this.nickname = nickname;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+    }
+
+	public void update(UserRequestDto requestDto) {
+        this.nickname = requestDto.getNickname();
+        this.password = requestDto.getPassword();
+        this.email = requestDto.getEmail();
+        this.phone = requestDto.getPhone();
+	}
 }

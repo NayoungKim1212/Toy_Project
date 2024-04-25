@@ -18,7 +18,10 @@ import com.example.demo.dto.UserResponseDto;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.util.JwtUtil;
+
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -88,6 +91,11 @@ public class UserSerivce {
         return response;
 	}
 
+    private User findUser(String loginId) {   	
+        return userRepository.findByLoginId(loginId).orElseThrow(() ->
+        new IllegalArgumentException("헤당 유저는 존재하지 않습니다."));
+	}
+
     // 로그인
 	public ResponseEntity<String> login(UserRequestDto requestDto, HttpServletResponse res) {
         String loginId = requestDto.getLoginId();
@@ -109,5 +117,50 @@ public class UserSerivce {
         return new ResponseEntity<>("로그인 성공", HttpStatus.OK);
     }
 
+	// 회원 정보 수정
+	@Transactional
+	public ResponseEntity<?> update(String loginId, String tokenValue, UserRequestDto requestDto) {
+		
+	//	User user = findUser(loginId);
+        String token = authentication(tokenValue);
+        String loginIdFromToken = getUsernameFromJwt(token);
+		
+        // 요청받은 loginId와 토큰에서 추출한 loginId가 일치하는지 검증합니다.
+        if (!loginId.equals(loginIdFromToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access: Login ID does not match token.");
+        }
+
+        // 데이터베이스에서 사용자 정보를 조회합니다.
+        User user = findUser(loginId);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        // 사용자 정보를 업데이트합니다.
+        user.update(requestDto);
+
+        // 업데이트된 사용자 정보로 응답을 생성합니다.
+        return new ResponseEntity<>(new UserResponseDto(user), HttpStatus.OK);
+    }
+	
+//    private void usernameMatch(String loginId) {
+//        if (!loginId.equals(loginId)){
+//            throw new IllegalArgumentException("잘못된 사용자입니다.");
+//        }
+//    }
+
+	private String authentication(String tokenValue) { // 유효한 토큰인지 확인하고 토큰 반환
+        String decodedToken = jwtUtil.decodingToken(tokenValue);
+        String token = jwtUtil.substringToken(decodedToken);
+        if (!jwtUtil.validateToken(token)) {
+            throw new IllegalArgumentException("Token Error");
+        }
+        return token;
+    }
+    private String getUsernameFromJwt(String token) { // 토큰에서 사용자 정보 가져오기
+        Claims info = jwtUtil.getUserInfoFromToken(token);
+        String loginId = info.getSubject();
+        return loginId;
+    }
 
 }
