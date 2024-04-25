@@ -39,7 +39,7 @@ public class User extends Timestamped{
     private String phone; 
     
     @Column
-	private String email;
+    private String email;
     
     public User(String loginId, String password, String nickname, String name, String phone, String email) {
         this.loginId = loginId;
