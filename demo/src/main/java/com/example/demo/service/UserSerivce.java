@@ -142,12 +142,6 @@ public class UserSerivce {
         // 업데이트된 사용자 정보로 응답을 생성합니다.
         return new ResponseEntity<>(new UserResponseDto(user), HttpStatus.OK);
     }
-	
-//    private void usernameMatch(String loginId) {
-//        if (!loginId.equals(loginId)){
-//            throw new IllegalArgumentException("잘못된 사용자입니다.");
-//        }
-//    }
 
 	private String authentication(String tokenValue) { // 유효한 토큰인지 확인하고 토큰 반환
         String decodedToken = jwtUtil.decodingToken(tokenValue);
