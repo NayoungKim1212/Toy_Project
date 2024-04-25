@@ -33,7 +33,7 @@ public class UserController {
 	}
 	
 	// 로그인
-   	 @PostMapping("/login")
+   	@PostMapping("/login")
     	public ResponseEntity<?> login(@RequestBody UserRequestDto requestDto, HttpServletResponse res) {
         	return userService.login(requestDto, res);
     	}
