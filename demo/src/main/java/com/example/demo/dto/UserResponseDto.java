@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 public class UserResponseDto {
 
 	private Long id;
-    private String loginId;
-    private String name;
-    private String phone;
-    private String email;
-    private String nickname;
+    	private String loginId;
+    	private String name;
+    	private String phone;
+    	private String email;
+    	private String nickname;
 
     public UserResponseDto(User user) {
         this.id = user.getId();
