@@ -33,23 +33,23 @@ public class UserController {
 	}
 	
 	// 로그인
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserRequestDto requestDto, HttpServletResponse res) {
-        return userService.login(requestDto, res);
-    }
+   	 @PostMapping("/login")
+    	public ResponseEntity<?> login(@RequestBody UserRequestDto requestDto, HttpServletResponse res) {
+        	return userService.login(requestDto, res);
+    	}
 
-    // 회원 목록 조회
+    	// 회원 목록 조회
 	@GetMapping("/list")
-    public ResponseEntity<Map<String, Object>> readUser(@RequestParam("page") int page, @RequestParam("pageSize") int size) {
-    	return ResponseEntity.ok(userService.readUser(page, size));
-    }
+    	public ResponseEntity<Map<String, Object>> readUser(@RequestParam("page") int page, @RequestParam("pageSize") int size) {
+    		return ResponseEntity.ok(userService.readUser(page, size));
+   	 }
 
 	// 회원 정보 수정
 	@PatchMapping("/{loginId}")
-    public ResponseEntity<?> update(@PathVariable("loginId") String loginId,
-    								@RequestHeader("Authorization") String tokenValue,
-    								@RequestBody UserRequestDto requestDto) {
-    	return userService.update(loginId, tokenValue, requestDto);
-    }
+    	public ResponseEntity<?> update(@PathVariable("loginId") String loginId,
+    					@RequestHeader("Authorization") String tokenValue,
+    					@RequestBody UserRequestDto requestDto) {
+    		return userService.update(loginId, tokenValue, requestDto);
+    	}
 
 }
