@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.UserRequestDto;
 import com.example.demo.service.UserSerivce;
 
-
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -34,5 +34,11 @@ public class UserController {
 	@GetMapping("/list")
     public ResponseEntity<Map<String, Object>> readUser(@RequestParam("page") int page, @RequestParam("pageSize") int size) {
     	return ResponseEntity.ok(userService.readUser(page, size));
+    }
+	
+	// 로그인
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserRequestDto requestDto, HttpServletResponse res) {
+        return userService.login(requestDto, res);
     }
 }
