@@ -61,5 +61,23 @@ public class UserSerivce {
             
             return ResponseEntity.status(201).body(responseDto);
     }
+        // 회원 목록 조회
+	public Map<String, Object> readUser(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "name"));
+        Page<User> userList = userRepository.findAll(pageable);
+        
+        List<UserResponseDto> result = userList.getContent().stream()
+                .map(UserResponseDto::new)
+                .collect(Collectors.toList());
+
+        int totalPages = userList.getTotalPages();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", result);
+        response.put("totalPages", totalPages);
+
+        return response;
+	}
 
 }
