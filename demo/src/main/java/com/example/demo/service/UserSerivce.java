@@ -88,15 +88,15 @@ public class UserSerivce {
         response.put("totalPages", totalPages);
 
         return response;
-	}
+    }
 
     private User findUser(String loginId) {   	
         return userRepository.findByLoginId(loginId).orElseThrow(() ->
         new IllegalArgumentException("헤당 유저는 존재하지 않습니다."));
-	}
+     }
 
     // 로그인
-	public ResponseEntity<String> login(UserRequestDto requestDto, HttpServletResponse res) {
+    public ResponseEntity<String> login(UserRequestDto requestDto, HttpServletResponse res) {
         String loginId = requestDto.getLoginId();
         String password = requestDto.getPassword();
 
@@ -116,7 +116,7 @@ public class UserSerivce {
         return new ResponseEntity<>("로그인 성공", HttpStatus.OK);
     }
 
-	// 회원 정보 수정
+    // 회원 정보 수정
     @Transactional
     public ResponseEntity<UserResponseDto> update(String loginId, String tokenValue, UserRequestDto requestDto) {
     	
@@ -134,9 +134,9 @@ public class UserSerivce {
 
         user.update(requestDto, passwordEncoder); 
         return ResponseEntity.ok(new UserResponseDto(user)); 
-    }
+     }
 
-	private String authentication(String tokenValue) { // 유효한 토큰인지 확인하고 토큰 반환
+     private String authentication(String tokenValue) { // 유효한 토큰인지 확인하고 토큰 반환
 		
         String decodedToken = jwtUtil.decodingToken(tokenValue);
         String token = jwtUtil.substringToken(decodedToken);
@@ -145,12 +145,12 @@ public class UserSerivce {
             throw new IllegalArgumentException("Token Error");
         }
         return token;
-    }
+     }
 	
-    private String getUsernameFromJwt(String token) { // 토큰에서 사용자 정보 가져오기
+     private String getUsernameFromJwt(String token) { // 토큰에서 사용자 정보 가져오기
         Claims info = jwtUtil.getUserInfoFromToken(token);
         String loginId = info.getSubject();
         return loginId;
-    }
+     }
 
 }
