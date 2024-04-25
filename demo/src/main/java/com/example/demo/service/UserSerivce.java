@@ -38,7 +38,6 @@ public class UserSerivce {
     public ResponseEntity<ErrorResponseDto> join(UserRequestDto requestDto) {
     	
         String loginId = requestDto.getLoginId();
-        String password = passwordEncoder.encode(requestDto.getPassword());
         String nickname = requestDto.getNickname();
 
         // 회원 ID 중복 확인
@@ -118,39 +117,36 @@ public class UserSerivce {
     }
 
 	// 회원 정보 수정
-	@Transactional
-	public ResponseEntity<?> update(String loginId, String tokenValue, UserRequestDto requestDto) {
-		
-	//	User user = findUser(loginId);
-        String token = authentication(tokenValue);
-        String loginIdFromToken = getUsernameFromJwt(token);
-		
-        // 요청받은 loginId와 토큰에서 추출한 loginId가 일치하는지 검증합니다.
-        if (!loginId.equals(loginIdFromToken)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access: Login ID does not match token.");
+    @Transactional
+    public ResponseEntity<UserResponseDto> update(String loginId, String tokenValue, UserRequestDto requestDto) {
+    	
+        String token = authentication(tokenValue);  
+        String userIdFromToken = getUsernameFromJwt(token); 
+
+        if (!loginId.equals(userIdFromToken)) {
+            throw new IllegalArgumentException("잘못된 사용자입니다."); 
         }
 
-        // 데이터베이스에서 사용자 정보를 조회합니다.
         User user = findUser(loginId);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
         }
 
-        // 사용자 정보를 업데이트합니다.
-        user.update(requestDto);
-
-        // 업데이트된 사용자 정보로 응답을 생성합니다.
-        return new ResponseEntity<>(new UserResponseDto(user), HttpStatus.OK);
+        user.update(requestDto, passwordEncoder); 
+        return ResponseEntity.ok(new UserResponseDto(user)); 
     }
 
 	private String authentication(String tokenValue) { // 유효한 토큰인지 확인하고 토큰 반환
+		
         String decodedToken = jwtUtil.decodingToken(tokenValue);
         String token = jwtUtil.substringToken(decodedToken);
+        
         if (!jwtUtil.validateToken(token)) {
             throw new IllegalArgumentException("Token Error");
         }
         return token;
     }
+	
     private String getUsernameFromJwt(String token) { // 토큰에서 사용자 정보 가져오기
         Claims info = jwtUtil.getUserInfoFromToken(token);
         String loginId = info.getSubject();

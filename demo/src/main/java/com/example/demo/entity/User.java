@@ -1,6 +1,9 @@
 package com.example.demo.entity;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import com.example.demo.dto.UserRequestDto;
+import com.example.demo.util.Timestamped;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class User{
+public class User extends Timestamped{
 	
     @Id
     @Column
@@ -46,24 +49,16 @@ public class User{
         this.phone = phone;
         this.email = email;
     }
-    
-    public User(UserRequestDto requestDto, String loginId, String password, String nickname) {
-        this.loginId = requestDto.getLoginId();
-        this.password = requestDto.getPassword();
-        this.nickname = requestDto.getNickname();
-    }
 
-    public User(String nickname, String password, String email, String phone) {
-        this.nickname = nickname;
-        this.password = password;
-        this.email = email;
-        this.phone = phone;
-    }
-
-	public void update(UserRequestDto requestDto) {
+    public void update(UserRequestDto requestDto, PasswordEncoder passwordEncoder) {
         this.nickname = requestDto.getNickname();
-        this.password = requestDto.getPassword();
+        
+        // 비밀번호 Encode
+        if (requestDto.getPassword() != null && !requestDto.getPassword().trim().isEmpty()) {
+            this.password = passwordEncoder.encode(requestDto.getPassword());
+        }
+        
         this.email = requestDto.getEmail();
         this.phone = requestDto.getPhone();
-	}
+    }
 }

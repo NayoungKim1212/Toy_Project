@@ -73,7 +73,7 @@ public class JwtUtil {
             logger.error(e.getMessage());
         }
     }
-    
+
     public String decodingToken(String tokenValue) {
         try {
             String a = URLDecoder.decode(tokenValue,"utf-8");
@@ -93,6 +93,7 @@ public class JwtUtil {
         logger.error("Not Found Token");
         throw new NullPointerException("Not Found Token");
     }
+    
     
     // 토큰 검증(JWT 검증)
     public boolean validateToken(String token) {

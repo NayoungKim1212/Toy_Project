@@ -47,7 +47,7 @@ public class UserController {
 	// 회원 정보 수정
 	@PatchMapping("/{loginId}")
     public ResponseEntity<?> update(@PathVariable("loginId") String loginId,
-    								String tokenValue,
+    								@RequestHeader("Authorization")String tokenValue,
     								@RequestBody UserRequestDto requestDto) {
     	return userService.update(loginId, tokenValue, requestDto);
     }
