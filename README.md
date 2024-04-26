@@ -38,5 +38,5 @@
 
 # Open API 명세서
 
-[Swagger API 명세서](https://yunamom.tistory.com](http://localhost:8080/swagger-ui/index.html)
+[Swagger API 명세서](http://localhost:8080/swagger-ui/index.html)
 
