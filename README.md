@@ -35,3 +35,8 @@
    - 접근 방식 : POST
 
    - 로그인 시 loginId에 토큰을 부여
+
+# Open API 명세서
+
+[Swagger API 명세서]([https://yunamom.tistory.com](http://localhost:8080/swagger-ui/index.html))
+
